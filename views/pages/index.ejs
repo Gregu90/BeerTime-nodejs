@@ -23,7 +23,15 @@
   <hr>
 
    <div class="alert alert-info text-center" role="alert">
-    Please do work through the Getting Started guide, even if you do know how to build such an application.  The guide covers the basics of working with Heroku, and will familiarize you with all the concepts you need in order to build and deploy your own apps.
+    Please do work
+    <% if (!user) { %>
+      <div style="width:500px;height:180px;">
+        <h2 style="font-size:40px;">Welcome! Please log in.</h2>
+        <a href="/auth/facebook"><img src="fb-login.jpg" width="151" height="24"></a>
+        </div>
+    <% } else { %>
+        <h2>Hello, <%= user.username %>.</h2>
+    <% } %>
   </div>
 </div>
 
