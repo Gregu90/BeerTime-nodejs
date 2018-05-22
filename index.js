@@ -3,54 +3,39 @@ const express           =     require('express')
   , PORT              =     process.env.PORT || 5000
   , passport          =     require('passport')
   , Strategy          =     require('passport-facebook').Strategy
-  , config            =     require('./configuration/config')
-  , {Client}            =     require('pg')
+  , auth              =     require('./configuration/auth')
+  , flash             =     require('connect-flash')
+  , morgan            =     require('morgan')
+  , cookieParser      =     require('cookie-parser')
+  , bodyParser        =     require('body-parser')
+  , session           =     require('express-session')
+  , {Client}          =     require('pg')
+  , configDB          =     require('.configuration/database.js')
   , app               =     express();
-
-  // const connectionStr = "dbname=d1nd0154tedbfl host=ec2-54-247-89-189.eu-west-1.compute.amazonaws.com port=5432 user=lhftxuijckxerm password=64c941f228cb48eee309db6da54f8811071bc4e85deed14ddee927f57dbdc080 sslmode=require"
-  // const client = new Client({
-  //   connectionString: connectionStr,
-  //   ssl: true,
-  // });
-  // const client = new Client({
-  //   host: config.host,
-  //   port: config.port,
-  //   user: config.username,
-  //   password: config.password,
-  // })
 
   const client = new Client({
     connectionString: process.env.DATABASE_URL,
     ssl: true,
   });
   
-  client.connect((err) => {
-    if (err) {
-      console.error('connection error', err.stack)
-    } else {
-      console.log('connected')
-    }
-  })
-  
-  client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
-    if (err) throw err;
-    for (let row of res.rows) {
-      console.log(JSON.stringify(row));
-    }
-    client.end();
-  });
-
-
+  client.connect()
+  .then(() => console.log('connected'))
+  .catch(e => console.error('connection error', err.stack))
+// require('./configuration/passport')(passport); // pass passport for configuration
 
 app
   .use(express.static(path.join(__dirname, 'public')))
-  .set('views', path.join(__dirname, 'views'))
+  .use(morgan('dev'))
+  .use(cookieParser())
+  .use(bodyParser())
   .set('view engine', 'ejs')
-  .get('/', (req, res) => res.render('pages/index'))
+  .use(session({secret:'ilovespalkabeertimetimebeerlovepalka'}))
   .use(passport.initialize())
   .use(passport.session())
+  .use(flash())
   .listen(PORT, () => console.log(`Listening on ${ PORT }`))
 
+  require('./app/routes.js')(app, passport);
 
   passport.use(new Strategy({
     clientID: config.facebook_api_key,
