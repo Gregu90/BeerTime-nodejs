@@ -20,7 +20,7 @@ const express           =     require('express')
   client.connect()
   .then(() => console.log('connected'))
   .catch(e => console.error('connection error', err.stack))
-// require('./configuration/passport')(passport); // pass passport for configuration
+ require('./configuration/passport')(passport); // pass passport for configuration
 
 app
   .use(express.static(path.join(__dirname, 'public')))
@@ -36,20 +36,20 @@ app
 
   require('./app/routes.js')(app, passport);
 
-  passport.use(new Strategy({
-    clientID: auth.facebookAuth,
-    clientSecret:auth.secret ,
-    callbackURL: auth.callback_url
-  },
-  function(accessToken, refreshToken, profile, done) {
-    process.nextTick(function () {
-      //Check whether the User exists or not using profile.id
-      console.log(`Check whether the User exists or not using profile.id ${profile.clientID}`)
-      if(config.use_database==='true')
-      {
-         //Further code of Database.
-      }
-      return done(null, profile);
-    });
-  }
-));
+//   passport.use(new Strategy({
+//     clientID: auth.facebookAuth,
+//     clientSecret:auth.secret ,
+//     callbackURL: auth.callback_url
+//   },
+//   function(accessToken, refreshToken, profile, done) {
+//     process.nextTick(function () {
+//       //Check whether the User exists or not using profile.id
+//       console.log(`Check whether the User exists or not using profile.id ${profile.clientID}`)
+//       if(config.use_database==='true')
+//       {
+//          //Further code of Database.
+//       }
+//       return done(null, profile);
+//     });
+//   }
+// ));
