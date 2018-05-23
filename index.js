@@ -37,8 +37,8 @@ app
   require('./app/routes.js')(app, passport);
 
   passport.use(new Strategy({
-    clientID: config.facebook_api_key,
-    clientSecret:config.facebook_api_secret ,
+    clientID: auth.facebookAuth,
+    clientSecret:auth.secret ,
     callbackURL: config.callback_url
   },
   function(accessToken, refreshToken, profile, done) {
