@@ -39,7 +39,7 @@ app
   passport.use(new Strategy({
     clientID: auth.facebookAuth,
     clientSecret:auth.secret ,
-    callbackURL: config.callback_url
+    callbackURL: auth.callback_url
   },
   function(accessToken, refreshToken, profile, done) {
     process.nextTick(function () {
